@@ -192,41 +192,66 @@ public class editUserDetails extends javax.swing.JFrame {
     }//GEN-LAST:event_lastNameEnteredActionPerformed
 
     private void confirmButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmButtonActionPerformed
-        boolean updateUser = true;
-      
-        String email = new String(emailEntered.getText());
-        if(email!=" "){
-        boolean validEmail = formatChecks.validEmail(email);
-            if(validEmail == false){
-                System.out.println("Your email is not in the correct format");
-                updateUser = false;
-            } else {
-                databaseOrders.updateEmail(email);
+        try {
+            boolean updateUser = true;
+
+            String email = new String(emailEntered.getText());
+            if (email != "") {
+                boolean validEmail = formatChecks.validEmail(email);
+                if (validEmail == false) {
+                    System.out.println("Your email is not in the correct format");
+                    updateUser = false;
+                } else {
+                    databaseOrders.updateEmail(email);
+                }
             }
-        }
-        
-        String password = new String(passwordEntered.getText());
-        String passwordCheck = new String(passwordCheckEntered.getText());
-        if(email!=" "){
-        boolean validPassword = formatChecks.validPassword(password, passwordCheck);
-        if(validPassword == false){
-            System.out.println("Password incorrect format");
-            updateUser = false;
-        } else{
-            password = hash.hashedPassword(password);
-        }
-        }
-        String firstName = firstNameEntered.getText();
-        String lastName = lastNameEntered.getText();
-        String dateOfBirth = dateOfBirthEntered.getText();
-        if(updateUser==true){
+
+            String password = new String(passwordEntered.getText());
+            String passwordCheck = new String(passwordCheckEntered.getText());
+            if (password != "") {
+                boolean validPassword = formatChecks.validPassword(password, passwordCheck);
+                if (validPassword == false) {
+                    System.out.println("Password incorrect format");
+                    updateUser = false;
+                } else {
+                    password = hash.hashedPassword(password);
+                    databaseOrders.updatePassword(password);
+                }
+            }
+            String firstName = firstNameEntered.getText();
+            if (firstName != "") {
+            boolean validFirstName = formatChecks.firstNameValid(firstName);
+            if (validFirstName == false) {
+                System.out.println("Your first name is not in the correct format");
+                updateUser = false;
+            } else{
+                databaseOrders.updateFirstName(email);
+            }
+            }
+            String lastName = lastNameEntered.getText();
+            if (lastName != " ") {
+            boolean validLastName = formatChecks.lastNameValid(lastName);
+            if (validLastName == false) {
+                System.out.println("Your first name is not in the correct format");
+                updateUser = false;
+            } else{
+                databaseOrders.updateLastName(password);
+            }
+            }
+            String dateStr = dateOfBirthEntered.getText();
             
-            
-            HomePage home = new HomePage();
-            home.setVisible(true);
-            this.dispose();
+            if (updateUser == true) {
+                
+                HomePage home = new HomePage();
+                home.setVisible(true);
+                this.dispose();
+            }
+        } catch (Exception e) {
+
+        }
+
     }//GEN-LAST:event_confirmButtonActionPerformed
-    }
+
     private void passwordEnteredActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordEnteredActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_passwordEnteredActionPerformed
@@ -236,9 +261,9 @@ public class editUserDetails extends javax.swing.JFrame {
     }//GEN-LAST:event_firstNameEnteredActionPerformed
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
-       HomePage home = new HomePage();
-                home.setVisible(true);
-                this.dispose();
+        HomePage home = new HomePage();
+        home.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_backButtonActionPerformed
 
     /**

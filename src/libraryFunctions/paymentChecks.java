@@ -26,16 +26,7 @@ public class paymentChecks {
         return valid;
     }
 
-    public static int[] ascii(String dataToAscii) {
-        char[] characters = dataToAscii.toCharArray();
-        int[] ascii = new int[characters.length];
-        for (int i = 0; i < characters.length; i++) {
-            char character = characters[i];
-            int asciiValue = (int) character;
-            ascii[i] = asciiValue;
-        }
-        return ascii;
-    }
+    
 
     public static boolean CVC(boolean valid, int CVC) {
         
@@ -59,8 +50,7 @@ public class paymentChecks {
 
     public static boolean expiryDateCheck(boolean valid, LocalDate expiryDate) {
         
-        DateTimeFormatter expiryDateFormat = DateTimeFormatter.ofPattern("MM-yy");
-         //LocalDate expiryDateFormatted = LocalDate.parse(expiryDate, expiryDateFormat);
+        
         LocalDate current = LocalDate.now();
         if (expiryDate.isBefore(current)) {
             valid = false;

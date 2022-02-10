@@ -13,10 +13,7 @@ import java.util.ArrayList;
 public class databaseOrders {
 
     private static userDetailsObject currentUser;
-    private static ticketDetailsObject currentTicket;
-    private static stack myStack;
-    private static String tempEventName;
-    private static String stand;
+    
 
     public static boolean userLogIn(String email, String password) {
         boolean validUser = false;
@@ -28,7 +25,7 @@ public class databaseOrders {
             ResultSet rs = statement.executeQuery(sql);
 
             if (rs.next()) {
-                currentUser = new userDetailsObject(rs.getString("USERID"), rs.getString("email"), rs.getString("password"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("dateOfBirth"));
+                //currentUser = new userDetailsObject(rs.getString("USERID"), rs.getString("email"), rs.getString("password"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("dateOfBirth"));
                 validUser = true;
             }
             rs.close();
@@ -45,8 +42,6 @@ public class databaseOrders {
         String userID = currentUser.getUserID();
         return userID;
     }
-
-    
 
     public static String returnEmail() {
         return currentUser.getEmail();
@@ -108,6 +103,7 @@ public class databaseOrders {
         }
 
     }
+
     public static void updatePassword(String password) {
         try {
 
@@ -116,7 +112,6 @@ public class databaseOrders {
             String sql = "Update app.usertable set password = '" + password + "' where userID = '" + currentUser.getEmail() + "';";
             statement.executeUpdate(sql);
 
-            
             con.close();
 
         } catch (Exception e) {
@@ -125,15 +120,50 @@ public class databaseOrders {
         }
 
     }
+
     public static void updateLastName(String password) {
         try {
 
             Connection con = DriverManager.getConnection("jdbc:derby://localhost:1527/StadiumBookingDatabaseNea", "Noah", "password");
             Statement statement = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
             String sql = "Update app.usertable set password= '" + password + "' where userID= '" + currentUser.getEmail() + "';";
-           statement.executeUpdate(sql);
+            statement.executeUpdate(sql);
 
-           statement.close();
+            statement.close();
+            con.close();
+
+        } catch (Exception e) {
+            System.out.println(e);
+
+        }
+
+    }
+    public static void updateFirstName(String update) {
+        try {
+
+            Connection con = DriverManager.getConnection("jdbc:derby://localhost:1527/StadiumBookingDatabaseNea", "Noah", "password");
+            Statement statement = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            String sql = "Update app.usertable set firstname= '" + update + "' where userID= '" + currentUser.getEmail() + "';";
+            statement.executeUpdate(sql);
+
+            statement.close();
+            con.close();
+
+        } catch (Exception e) {
+            System.out.println(e);
+
+        }
+
+    }
+    public static void updateDate(String update) {
+        try {
+
+            Connection con = DriverManager.getConnection("jdbc:derby://localhost:1527/StadiumBookingDatabaseNea", "Noah", "password");
+            Statement statement = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            String sql = "Update app.usertable set date= '" + update + "' where userID= '" + currentUser.getEmail() + "'";
+            statement.executeUpdate(sql);
+
+            statement.close();
             con.close();
 
         } catch (Exception e) {
@@ -168,10 +198,10 @@ public class databaseOrders {
 
             Connection con = DriverManager.getConnection("jdbc:derby://localhost:1527/StadiumBookingDatabaseNea", "Noah", "password");
             Statement statement = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-            String sql = "INSERT INTO app.USERTABLE Values('" + user.getUserID() + "', '" + user.getEmail() + "', '" + user.getPassword() + "', '" + user.getFirstName() + "', '" + user.getLastName() + "', 'STR_TO_DATE('"+user.getDateOfBirth()+"', '%d,%m,%Y')');";
+            String sql = "INSERT INTO app.USERTABLE Values('" + user.getUserID() + "', '" + user.getEmail() + "', '" + user.getPassword() + "', '" + user.getFirstName() + "', '" + user.getLastName() + "', 'STR_TO_DATE('" + user.getDateOfBirth() + "', '%d,%m,%Y')');";
             statement.executeUpdate(sql);
             currentUser = user;
-            
+
             con.close();
             statement.close();
         } catch (Exception e) {
@@ -187,7 +217,7 @@ public class databaseOrders {
             Statement statement = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
             String sql = "INSERT INTO app.BOOKINGTABLE (bookingId, userId, ticketID, datebooked) VALUES ('" + booking.getBookingID() + "', '" + booking.getUserID() + "', '" + booking.getTicketID() + "', '" + booking.getDateBooked() + "');";
             statement.executeUpdate(sql);
-            
+
             con.close();
         } catch (Exception e) {
             System.out.println(e);
@@ -202,7 +232,7 @@ public class databaseOrders {
             Statement statement = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
             String sql = "INSERT INTO app.tickettable values ('" + ticket.getTicketID() + "', '" + ticket.getEventID() + "', '" + ticket.getSeatID() + "', '" + ticket.getType() + "', '" + ticket.getPrice() + "');";
             statement.executeUpdate(sql);
-            
+
             con.close();
         } catch (Exception e) {
             System.out.println(e);
@@ -218,7 +248,7 @@ public class databaseOrders {
             Statement statement = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
             String sql = "SELECT TICKETTABLE.seatID FROM app.ticketTABLE WHERE EXISTS (SELECT Untitled.seatID FROM app.untitled WHERE stand = " + 1 + ") AND TICKETID.EVENTID =" + 2;
             ResultSet rs = statement.executeQuery(sql);
-            while(rs.next()){
+            while (rs.next()) {
                 seatsBooked.add(rs.getString("seatID"));
             }
             rs.close();
@@ -229,7 +259,6 @@ public class databaseOrders {
         }
     }
 
-
     public static boolean isAdmin(String email, String password) {
 
         try {
@@ -238,8 +267,8 @@ public class databaseOrders {
             String sql = "Select adminID from app.admintable where exists (select userID from usertable where password= '" + password + "' and email= '" + "email');";
             ResultSet rs = statement.executeQuery(sql);
             boolean admin = false;
-            while(rs.next()){
-                 admin = true;
+            while (rs.next()) {
+                admin = true;
             }
             rs.close();
 
@@ -260,7 +289,7 @@ public class databaseOrders {
             Statement statement = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
             String sql = "Delete from app.eventtable and app.musictable and app.sporttable where eventID = '" + eventID + "';";
             statement.executeUpdate(sql);
-            
+
             con.close();
         } catch (Exception e) {
             System.out.println(e);
@@ -443,7 +472,7 @@ public class databaseOrders {
 
             String sql = "Select columnnumber from app.untitled where stand='" + stand + "' AND seatID= '" + seatID + "';";
             ResultSet rs = statement.executeQuery(sql);
-            
+
             int column = rs.getInt("coulmnnumber");
             rs.close();
             con.close();
@@ -602,4 +631,28 @@ public class databaseOrders {
         }
         return null;
     }
+
+    public static void addSeat(seatDetailsObject seat) {
+
+        try {
+            Connection con = DriverManager.getConnection("jdbc:derby://localhost:1527/StadiumBookingDatabaseNea", "Noah", "password");
+            Statement statement = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            String sql = "Select seatID from app.untitled where seatID= '" + seat.getSeatID() + "';";
+            ResultSet rs = statement.executeQuery(sql);
+            if (rs.next()) {
+
+            } else {
+                sql = "Insert into app.untitled values ('" + seat.getSeatID() + "', '" + seat.getRow() + "', '" + seat.getColumn() + "', '" + seat.getStand() + "', '" + seat.getPrice() + "');";
+                statement.executeUpdate(sql);
+            }
+            rs.close();
+            con.close();
+
+        } catch (Exception e) {
+            System.out.println(e);
+
+        }
+
+    }
+     
 }

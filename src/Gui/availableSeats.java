@@ -612,7 +612,7 @@ public class availableSeats extends javax.swing.JFrame {
         boolean valid = validSeats();
         
         if (valid) {
-            for (int i = 0; i <= seatsSelected.size(); i++) {
+            for (int i = 0; i < seatsSelected.size(); i++) {
 
                 int row = seatsSelected.get(i) / 8;
                 int column = seatsSelected.get(i) % 8;
@@ -622,7 +622,7 @@ public class availableSeats extends javax.swing.JFrame {
                 String seatID = String.join(tempSeat.getStand(), rowStr, columnStr);
                 double addedPrice = ticketPriceGenerator.rowPrice(row);
                 seatDetailsObject seat = new seatDetailsObject(seatID, row, column, tempSeat.getEvent(), addedPrice);
-                //databaseOrders.addSeat(seat);
+                databaseOrders.addSeat(seat);
                 double price = ticketPriceGenerator.ticketPrice(row, tempSeat.getEvent(), tempSeat.getStand());
                 String ticketID = generateId.uniqueId();
                 String bookingID = generateId.uniqueId();
@@ -652,7 +652,7 @@ public class availableSeats extends javax.swing.JFrame {
         for (int i = 0; i < userTickets.size(); i++) {
             ticketsBookedForEvent.add(databaseOrders.getTicketIDChosen(userTickets.get(i),tempSeat.getStand()));
         }
-        if (seatsSelected.size() > 6 - userTickets.size()) {
+        if (seatsSelected.size() > 6 - ticketsBookedForEvent.size()) {
             valid = false;
             System.out.println("You have booked too many seats for this event");
         }
